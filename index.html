@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>NiiVue</title>
+  </head>
+  <style>
+    html,
+    body {
+      font-family: system-ui, Arial, sans-serif;
+      background: white;
+      background-color: white;
+      color: black;
+    }
+    header, footer {
+      background-color: white;
+    }
+    canvas {
+      position: absolute;
+      cursor: crosshair;
+    }
+    canvas:focus {
+      outline: 0px;
+    }
+  </style>
+  <body>
+    <header>
+      <label for="bottom">Background (Gray):</label>
+      <select id="bottom">
+        <option value="0">Transparent</option>
+        <option value="50">Translucent</option>
+        <option value="100" selected>Opaque</option>
+      </select>
+      <label for="middle">Middle (Red):</label>
+      <select id="middle">
+        <option value="0">Transparent</option>
+        <option value="50" selected>Translucent</option>
+        <option value="100">Opaque</option>
+      </select>
+      <label for="top">Top (Blue):</label>
+      <select id="top">
+        <option value="0" selected>Transparent</option>
+        <option value="50">Translucent</option>
+        <option value="100">Opaque</option>
+      </select>
+    </header>
+    <footer id="location">
+      Details.
+    </footer>
+    <canvas
+      id="gl"
+      width="640"
+      height="640"
+      style="width: 640px; height: 640px"
+    ></canvas>
+  </body>
+  <script src="https://niivue.github.io/niivue/features/niivue.umd.js"></script>
+  <script>
+    document.getElementById("bottom").onchange = function(){
+      nv.setOpacity(0, this.value / 100);
+    };
+    document.getElementById("middle").onchange = function(){
+      nv.setOpacity(1, this.value / 100);
+    };
+    document.getElementById("top").onchange = function(){
+      nv.setOpacity(2, this.value / 100);
+    };
+    var volumeList = [
+      { url: "https://neurolabusc.github.io/niivue_volumes/fslmean.nii.gz", opacity: 1.0 },
+      { url: "https://neurolabusc.github.io/niivue_volumes/cope1.nii.gz", opacity: 0.5, colormap: "red", cal_min: 3, cal_max: 80},
+      { url: "https://neurolabusc.github.io/niivue_volumes/fslt.nii.gz", opacity: 0.0, colormap: "green", cal_min: 5, cal_max: 6},
+    ];
+    function handleLocationChange(data) {
+      document.getElementById("location").innerHTML = "&nbsp;&nbsp;" + data.string;
+    }
+    var nv = new niivue.Niivue({ isResizeCanvas: false , onLocationChange: handleLocationChange,});
+    nv.attachTo("gl");
+    nv.loadVolumes(volumeList);
+  </script>
+</html>
